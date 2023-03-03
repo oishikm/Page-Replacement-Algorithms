@@ -5,56 +5,7 @@
  * Oishik Mukhopadhyay | 03 March 2023
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-
-#define DEFAULT_PAGE_FRAMES 4
-#define ALGORITHM "FIFO"
-
-typedef struct _frame_buffer
-{
-	int* pages;
-	int frames;
-} frame_buffer;
-
-void init_frame_buffer(frame_buffer* buffer)
-{
-	buffer->pages = (int*)malloc(buffer->frames * sizeof(int));
-	int i;
-	for(i=0; i<buffer->frames; i++)
-	{
-		buffer->pages[i] = 0;
-	}
-}
-
-void set_frames(frame_buffer* buffer, int frame_size)
-{
-	buffer->frames = frame_size;
-}
-
-int check_page_in_table(frame_buffer* buffer, int page_id)
-{
-	int i, retval = -1;
-	for(i=0; i<buffer->frames; i++)
-	{
-		if(buffer->pages[i] == page_id)
-		{
-			retval = i;
-		}
-	}
-	return retval;
-}
-
-void print_table(frame_buffer* buffer)
-{
-	int i;
-	printf("\nTable : ");
-	for(i=0; i<buffer->frames; i++)
-	{
-		printf("%d ", buffer->pages[i]);
-	}
-	printf("\n");
-}
+#include"pagehandler.h"
 
 void fifo(frame_buffer* buffer, int page_id)
 {
@@ -88,15 +39,19 @@ int main()
 	frame_buffer fifo_buffer;
 	set_frames(&fifo_buffer, DEFAULT_PAGE_FRAMES);
 	init_frame_buffer(&fifo_buffer);
-	fifo(&fifo_buffer, 1);
-	fifo(&fifo_buffer, 2);
-	fifo(&fifo_buffer, 3);
-	fifo(&fifo_buffer, 4);
-	fifo(&fifo_buffer, 5);
-	fifo(&fifo_buffer, 5);
-	fifo(&fifo_buffer, 4);
-	fifo(&fifo_buffer, 3);
-	fifo(&fifo_buffer, 2);
-	fifo(&fifo_buffer, 1);
+	int* pages_queue;
+	int i, pages_queue_size;
+	printf("\nEnter pages queue size : ");
+	scanf(" %d", &pages_queue_size);
+	printf("\nEnter pages queue of size %d : ", pages_queue_size);
+	pages_queue = (int *)malloc(pages_queue_size * sizeof(int));
+	for(i=0; i<pages_queue_size; i++)
+	{
+	    scanf(" %d", &pages_queue[i]);
+	}
+	for(i=0; i<pages_queue_size; i++)
+	{
+	    fifo(&fifo_buffer, pages_queue[i]);
+	}
 	return 0;
 }
